@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Project Stage Transfer Portal</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Select2 -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <style>
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f172a, #1e3a8a, #2563eb);
+      font-family: "Segoe UI", sans-serif;
+      padding: 30px;
+    }
+
+    .main-container {
+      max-width: 1300px;
+      margin: auto;
+    }
+
+    .main-card {
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 30px;
+      padding: 40px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-section {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .office-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #2563eb, #06b6d4);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 40px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
+
+    .header-section h1 {
+      font-size: 40px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 10px;
+    }
+
+    .header-section p {
+      color: #475569;
+      font-size: 15px;
+    }
+
+    .card-section {
+      background: linear-gradient(135deg, #f8fafc, #eff6ff);
+      border-radius: 20px;
+      padding: 25px;
+      border: 1px solid #dbeafe;
+      transition: 0.3s;
+      height: 100%;
+    }
+
+    .card-section:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.15);
+    }
+
+    .form-label {
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+
+    .form-label i {
+      color: #2563eb;
+      margin-right: 8px;
+    }
+
+    .form-control,
+    .form-select {
+      height: 52px;
+      border-radius: 14px;
+      border: 2px solid #dbeafe;
+      font-size: 15px;
+      transition: 0.3s;
+    }
+
+    textarea.form-control {
+      min-height: 180px;
+      resize: vertical;
+      padding-top: 15px;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.15);
+    }
+
+    .select2-container {
+      width: 100% !important;
+    }
+
+    .select2-container--default .select2-selection--single {
+      height: 52px !important;
+      border-radius: 14px !important;
+      border: 2px solid #dbeafe !important;
+      padding-top: 11px;
+    }
+
+    .select2-selection__arrow {
+      margin-top: 10px;
+    }
+
+    .submit-btn {
+      background: linear-gradient(135deg, #2563eb, #06b6d4);
+      border: none;
+      color: white;
+      padding: 15px 40px;
+      border-radius: 16px;
+      font-size: 17px;
+      font-weight: 700;
+      transition: 0.3s;
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-3px);
+    }
+
+    .submit-btn i {
+      margin-right: 10px;
+    }
+
+    .output-card {
+      margin-top: 40px;
+      background: #0f172a;
+      border-radius: 25px;
+      padding: 30px;
+      position: relative;
+    }
+
+    .output-title {
+      color: white;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .json-output {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 18px;
+      padding: 20px;
+      color: #22c55e;
+      font-family: Consolas, monospace;
+      font-size: 15px;
+      min-height: 220px;
+      white-space: pre-wrap;
+      overflow-x: auto;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 25px;
+      right: 25px;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border: none;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 700;
+      transition: 0.3s;
+    }
+
+    .copy-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .serial-note {
+      margin-top: 10px;
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="main-container">
+
+    <div class="main-card">
+
+      <!-- Header -->
+      <div class="header-section">
+
+        <div class="office-badge">
+          OFFICE WORKFLOW MANAGEMENT
+        </div>
+
+        <h1>
+             MES REDIS
+        </h1>
+
+        <p>
+          Manage project stages and generate JSON instantly
+        </p>
+
+      </div>
+
+      <!-- Form -->
+      <div class="row g-4">
+
+        <!-- Project -->
+        <div class="col-md-6">
+          <div class="card-section">
+
+            <label class="form-label">
+              <i class="fa-solid fa-diagram-project"></i>
+              Project Name
+            </label>
+
+            <select id="projectSelect" class="form-select">
+              <option value="">Select Project</option>
+            </select>
+
+          </div>
+        </div>
+
+        <!-- Product -->
+        <div class="col-md-6">
+          <div class="card-section">
+
+            <label class="form-label">
+              <i class="fa-solid fa-box"></i>
+              Product ID
+            </label>
+
+            <select id="productSelect" class="form-select">
+              <option value="">Select Product</option>
+            </select>
+
+          </div>
+        </div>
+
+        <!-- Current Stage -->
+        <div class="col-md-6">
+          <div class="card-section">
+
+            <label class="form-label">
+              <i class="fa-solid fa-gear"></i>
+              Current Stage
+            </label>
+
+            <select id="currentStage" class="form-select">
+              <option value="">Select Current Stage</option>
+            </select>
+
+          </div>
+        </div>
+
+        <!-- Next Stage -->
+        <div class="col-md-6">
+          <div class="card-section">
+
+            <label class="form-label">
+              <i class="fa-solid fa-forward-step"></i>
+              Next Stage
+            </label>
+
+            <select id="nextStage" class="form-select">
+              <option value="">Select Next Stage</option>
+            </select>
+
+          </div>
+        </div>
+
+        <!-- Operator -->
+        <div class="col-md-6">
+          <div class="card-section">
+
+            <label class="form-label">
+              <i class="fa-solid fa-user"></i>
+              Operator ID
+            </label>
+
+            <input
+              type="text"
+              id="operatorId"
+              class="form-control"
+              value="vvdn/"
+            />
+
+          </div>
+        </div>
+
+        <!-- Serial Numbers -->
+        <div class="col-12">
+          <div class="card-section">
+
+            <label class="form-label">
+              <i class="fa-solid fa-list"></i>
+              Serial Numbers
+            </label>
+
+            <textarea
+              id="serialNumbers"
+              class="form-control"
+              placeholder="Enter one serial number per line"
+            ></textarea>
+
+            <div class="serial-note">
+              Example:
+              <br>
+              SN001
+              <br>
+              SN002
+              <br>
+              SN003
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <div class="col-12 text-center mt-4">
+
+          <button class="submit-btn" id="submitBtn">
+
+            <i class="fa-solid fa-paper-plane"></i>
+
+            Generate JSON
+
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- Output -->
+      <div class="output-card">
+
+        <button class="copy-btn" id="copyBtn">
+
+          <i class="fa-solid fa-copy"></i>
+
+          Copy JSON
+
+        </button>
+
+        <div class="output-title">
+          Generated JSON Output
+        </div>
+
+        <div id="jsonOutput" class="json-output">
+Waiting for data...
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- JQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <!-- Bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Select2 -->
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+  <script>
+
+    // ============================================
+    // API URL SECTION
+    // ============================================
+
+    const PROJECT_API = "YOUR_PROJECT_API_URL";
+    const STAGE_API = "YOUR_STAGE_API_URL";
+
+    // ============================================
+    // SELECT2 INIT
+    // ============================================
+
+    $('#projectSelect').select2();
+    $('#productSelect').select2();
+    $('#currentStage').select2();
+    $('#nextStage').select2();
+
+    // ============================================
+    // GLOBAL DATA
+    // ============================================
+
+    let projectData = [];
+
+    // ============================================
+    // LOAD PROJECTS
+    // ============================================
+
+    async function loadProjects() {
+
+      try {
+
+        /*
+        const response = await fetch(PROJECT_API);
+        const data = await response.json();
+        projectData = data;
+        */
+
+        // Dummy Data
+
+        projectData = [
+
+          {
+            id: 1,
+            name: "Mobile Repair Project",
+            products: [
+              { productId: "MB-1001" },
+              { productId: "MB-1002" },
+              { productId: "MB-1003" }
+            ]
+          },
+
+          {
+            id: 2,
+            name: "Laptop Testing Project",
+            products: [
+              { productId: "LP-2001" },
+              { productId: "LP-2002" }
+            ]
+          },
+
+          {
+            id: 3,
+            name: "Networking Device Project",
+            products: [
+              { productId: "NW-3001" },
+              { productId: "NW-3002" },
+              { productId: "NW-3003" }
+            ]
+          }
+
+        ];
+
+        projectData.forEach(project => {
+
+          $('#projectSelect').append(`
+            <option value="${project.id}">
+              ${project.name}
+            </option>
+          `);
+
+        });
+
+      } catch (error) {
+
+        console.log(error);
+
+      }
+
+    }
+
+    // ============================================
+    // LOAD STAGES
+    // ============================================
+
+    async function loadStages() {
+
+      try {
+
+        /*
+        const response = await fetch(STAGE_API);
+        const stages = await response.json();
+        */
+
+        const stages = [
+
+          { id: 101, name: "Incoming" },
+          { id: 102, name: "Testing" },
+          { id: 103, name: "Repair" },
+          { id: 104, name: "Quality Check" },
+          { id: 105, name: "Packing" },
+          { id: 106, name: "Dispatch" }
+
+        ];
+
+        stages.forEach(stage => {
+
+          const option = `
+            <option value="${stage.id}">
+              ${stage.name}
+            </option>
+          `;
+
+          $('#currentStage').append(option);
+          $('#nextStage').append(option);
+
+        });
+
+      } catch (error) {
+
+        console.log(error);
+
+      }
+
+    }
+
+    // ============================================
+    // PROJECT CHANGE
+    // ============================================
+
+    $('#projectSelect').on('change', function () {
+
+      const selectedProjectId = $(this).val();
+
+      $('#productSelect').html(`
+        <option value="">Select Product</option>
+      `);
+
+      const selectedProject = projectData.find(
+        item => item.id == selectedProjectId
+      );
+
+      if (selectedProject) {
+
+        selectedProject.products.forEach(product => {
+
+          $('#productSelect').append(`
+            <option value="${product.productId}">
+              ${product.productId}
+            </option>
+          `);
+
+        });
+
+      }
+
+      $('#productSelect').trigger('change');
+
+    });
+
+    // ============================================
+    // GENERATE JSON
+    // ============================================
+
+    $('#submitBtn').on('click', function () {
+
+      const serialArray = $('#serialNumbers')
+        .val()
+        .split('\n')
+        .map(item => item.trim())
+        .filter(item => item !== '');
+
+      // Stage Name
+      const currentStageName =
+        $('#currentStage option:selected').text().trim();
+
+      const nextStageName =
+        $('#nextStage option:selected').text().trim();
+
+      // Stage ID
+      const currentStageId =
+        $('#currentStage').val();
+
+      const nextStageId =
+        $('#nextStage').val();
+
+      // Final JSON
+
+      const finalJson = {
+
+        serial: serialArray,
+
+        product_id: $('#productSelect').val(),
+
+        current_stage: currentStageName,
+
+        current_stage_id: currentStageId,
+
+        next_stage: nextStageName,
+
+        next_stage_id: nextStageId,
+
+        operator_id: $('#operatorId').val()
+
+      };
+
+      $('#jsonOutput').text(
+        JSON.stringify(finalJson, null, 2)
+      );
+
+    });
+
+    // ============================================
+    // COPY JSON
+    // ============================================
+
+    $('#copyBtn').on('click', function () {
+
+      const jsonText = $('#jsonOutput').text();
+
+      navigator.clipboard.writeText(jsonText);
+
+      this.innerHTML = `
+        <i class="fa-solid fa-check"></i>
+        Copied
+      `;
+
+      setTimeout(() => {
+
+        this.innerHTML = `
+          <i class="fa-solid fa-copy"></i>
+          Copy JSON
+        `;
+
+      }, 2000);
+
+    });
+
+    // ============================================
+    // INITIAL LOAD
+    // ============================================
+
+    loadProjects();
+    loadStages();
+
+  </script>
+
+</body>
+
+</html>
